@@ -22,6 +22,8 @@ we use this command to say computer to print something on the screen. it is used
 
 ```bash
 echo "Hello World"
+echo $# # number of arguments passed to the script. like ./script 1 2 3
+echo $0 # print the filename of current script
 ```
 
 ### writing first BASH script - See different methods to run script - make it executable
