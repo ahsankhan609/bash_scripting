@@ -103,3 +103,66 @@ echo "$greeting, $name. You are looking good today!"
 we can execute commands as output of a script.
 
 [Execute Commands as Output of a Script](/scripts/execute_commands_as_output.sh)
+
+### Math in BASH Scripts
+
+we can perform math operations in BASH scripts.
+
+[Math in BASH Scripts](/scripts/math_in_bash.sh)
+
+* $RANDOM is a built-in variable that generates a random number between 0 and 32767.
+
+Some examples of using $RANDOM:
+
+* $RANDOM % 10 generates a random number between 0 and 9.
+* $RANDOM % 100 generates a random number between 0 and 99.
+* $RANDOM % 10 + 10 generates a random number between 10 and 19.
+
+### Environment Variables
+
+we can use environment variables in BASH scripts. Environment variables are variables that are set by the system and are available to all processes running in the system.
+
+Some examples of environment variables:
+
+* $SHELL
+* $PWD
+* $USER
+* $HOSTNAME
+* $HOSTTYPE
+* $OSTYPE
+* $TERM
+
+If we want to use a custom environment variable, we can do that by using the export command.
+
+```bash
+export MY_VARIABLE="my value"
+echo $MY_VARIABLE
+```
+
+but if we **close our terminal**, our **custom environment variable** will be lost. to make it permanent, we can **add it** to our **.bashrc** file through terminal.
+
+```bash
+echo "export MY_VARIABLE=\"my value\"" >> ~/.bashrc # add the custom environment variable to the .bashrc file
+source ~/.bashrc # source the .bashrc file to apply the changes
+echo $MY_VARIABLE # print the custom environment variable
+```
+
+If we want to remove it, we can do that by using the unset command through terminal.
+
+```bash
+unset MY_VARIABLE # remove the custom environment variable from the terminal
+echo $MY_VARIABLE
+```
+
+but if we want to remove it permanently, we can do that by removing it from our **.bashrc** file, by opening it with a code editor and removing the line that contains the custom environment variable. Then we can source the .bashrc file to apply the changes.
+
+```bash
+code ~/.bashrc # open the .bashrc file with a code editor
+
+# remove the line that contains the custom environment variable
+# e.g. export MY_VARIABLE="my value"
+
+source ~/.bashrc # source the .bashrc file to apply the changes
+
+echo $MY_VARIABLE # print the custom environment variable
+```
