@@ -30,6 +30,7 @@ All scripts use `#!/bin/bash` and are meant to run on a typical Linux system whe
 - `echo`, `sleep`, variables, and `read` for user input
 - Command-line arguments: `$1`, `$*`, and multi-word values
 - Conditionals (`if` / `else`) and `for` loops
+- Comments (`#` single-line; multi-line patterns)
 
 ---
 
@@ -325,6 +326,64 @@ done
 ```
 
 Set variables **before** the `if` that uses them, same rule as standalone conditionals.
+
+---
+
+## Comments
+
+Comments explain scripts to humans; bash ignores them when running. Examples appear in scripts like [`bestdayever_v3.sh`](scripts/bestdayever_v3.sh) and [`positional_arguments.sh`](scripts/positional_arguments.sh).
+
+### Q: How do I write a single-line comment in bash?
+
+Start the line with **`#`**, or put **`#`** after code on the same line. Everything from `#` to the end of the line is ignored.
+
+```bash
+# This whole line is a comment
+echo "Hello"    # comment after code
+name="John"     # assign a name
+```
+
+**Exception:** `#!/bin/bash` on line 1 is the **shebang**, not a normal comment. It must be the first line when you run `./script.sh`.
+
+### Q: How do I write multiple-line comments in bash?
+
+Bash has **no** `/* ... */` block comment syntax like C or Java. Use one of these patterns:
+
+**1. `#` on each line (recommended for this repo):**
+
+```bash
+# This script checks a random lottery number.
+# If the number is greater than 50, you win.
+# Otherwise, you lose.
+```
+
+**2. Here-doc no-op (advanced, for long blocks):**
+
+```bash
+: <<'EOF'
+This block is ignored when the script runs.
+You can write several lines here.
+EOF
+```
+
+The leading `:` is a no-op; the here-doc is discarded.
+
+### Q: What does not work as a comment?
+
+```bash
+/* this is NOT valid bash — syntax error */
+```
+
+Stick with **`#`** for learning scripts in this project.
+
+### Q: Quick reference — comment styles
+
+| Style | Syntax | When to use |
+|-------|--------|-------------|
+| Full line | `# comment` | Most comments |
+| End of line | `cmd # note` | Short notes on one line |
+| Multi-line | `#` on each line | Normal multi-line docs |
+| Block (rare) | `: <<'EOF'` … `EOF` | Large disabled blocks |
 
 ---
 
