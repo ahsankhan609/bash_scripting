@@ -210,3 +210,17 @@ In the array `['car', 'train', 'bike', 'bus']` each item has a corresponding i
 All indexes start at position **0**.
 
 [Arrays](/scripts/arrays.sh)
+
+The last thing we will cover is if we want to **change an element**, or **delete it**. If we wanted to **remove an element** we would use the **unset utility**.
+
+`unset transport[1]`
+
+This now removes the **train item**, if we wanted to we could echo it back out and see that it is indeed gone.
+
+Now lets **set it to something else**. We can do:
+
+`transport[1]='trainride'`
+
+If we **echo the array** then we get:
+
+`car trainride bike bus`
