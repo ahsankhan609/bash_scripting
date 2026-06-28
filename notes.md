@@ -53,6 +53,18 @@ then we can execute the script by using the command:
 ./himom.sh
 ```
 
+### BASH Debugging
+
+we can use the set -x command to debug our script.
+
+```bash
+set -x # turn on debugging
+
+bash -x ./script.sh # output of the script will be printed with debugging information
+
+set +x # turn off debugging
+```
+
 ### BASH Variables
 
 we can write variables in BASH scripts. A variable is a name that represents a value. we can use variables to store data that we want to use later in our script.
