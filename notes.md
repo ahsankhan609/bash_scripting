@@ -97,3 +97,9 @@ greeting=$2
 
 echo "$greeting, $name. You are looking good today!"
 ```
+
+### Execute Commands as Output of a Script
+
+we can execute commands as output of a script.
+
+[Execute Commands as Output of a Script](/scripts/execute_commands_as_output.sh)
