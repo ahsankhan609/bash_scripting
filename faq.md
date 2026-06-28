@@ -278,18 +278,91 @@ Quoting avoids word-splitting and makes empty values safer to debug.
 
 Use these for **integers**. For string equality, use `=` or `==` inside `[ ]` or `[[ ]]`.
 
+### Q: Can I use `>=`, `>`, or `==` inside `[ ]` or `[[ ]]` for numbers?
+
+**No.** Bash test syntax does not use C/Java-style operators inside `[ ]` or `[[ ]]` for integer comparisons.
+
+```bash
+# Wrong — >= is not valid here
+if [ "$random_number" >= 50 ]; then
+
+# Wrong — same issue in [[ ]]
+if [[ "$random_number" >= 50 ]]; then
+```
+
+Use **word operators** instead:
+
+| Wrong (numbers) | Correct in `[ ]` / `[[ ]]` |
+|-----------------|------------------------------|
+| `>= 50` | `-ge 50` |
+| `> 50` | `-gt 50` |
+| `<= 50` | `-le 50` |
+| `< 50` | `-lt 50` |
+| `== 50` (numeric intent) | `-eq 50` |
+
+Examples for [`conditional_statements.sh`](scripts/conditional_statements.sh):
+
+```bash
+# Win if 50 or higher (0–99 range → about half win)
+if [ "$random_number" -ge 50 ]; then
+
+# Win only if strictly above 50 (51–99)
+if [ "$random_number" -gt 50 ]; then
+```
+
 ### Q: Should I use `[ ]` or `[[ ]]` for conditionals?
 
-Both work in bash. This repo starts with **`[ ]`** (POSIX-style tests) for learning.
+Both work in bash for tests. This repo starts with **`[ ]`** (POSIX-style) for learning.
 
-`[[ ... ]]` is bash-only and handles some cases more cleanly (e.g. `[[ $a -gt 50 ]]` without quoting is often OK). Prefer **`[ "$var" ... ]`** with quotes when using `[ ]`.
+| Syntax | Notes |
+|--------|--------|
+| `[ ]` | Portable; **quote variables**: `[ "$n" -ge 50 ]` |
+| `[[ ]]` | Bash-only; still use **`-ge`**, **`-gt`**, etc. for numbers |
 
-### Q: How does this relate to `$(( ... ))`?
+For **numbers** in `[[ ]]`, same operators as `[ ]`:
 
-- **`$((RANDOM % 100))`** — arithmetic expansion; computes a number.
-- **`[ "$n" -gt 50 ]`** — test command; compares values and returns true/false for `if`.
+```bash
+if [[ "$random_number" -ge 50 ]]; then
+```
 
-You often assign with `$(( ... ))` first, then compare in `[ ... ]`.
+For **strings**, `[[ ]]` often uses `==`:
+
+```bash
+if [[ "$like_bash" == "y" ]]; then    # string / pattern match — OK
+if [[ "$random_number" == 50 ]]; then  # string compare — avoid for numbers
+if [[ "$random_number" -eq 50 ]]; then  # numeric equal — use for integers
+```
+
+Prefer **`[ "$var" ... ]`** with quotes when using `[ ]`.
+
+### Q: When can I use `>=`, `>`, and other C-style operators?
+
+Inside **`(( ))`** — bash arithmetic evaluation:
+
+```bash
+if (( random_number >= 50 )); then
+    echo "You won a lottery of $random_number."
+fi
+```
+
+Inside `(( ))`, `>=`, `>`, `<=`, `<`, `==`, and `!=` work. Variables are usually **unquoted** (`random_number`, not `"$random_number"`).
+
+### Q: How do `[ ]`, `[[ ]]`, and `(( ))` relate to `$(( ... ))`?
+
+| Form | Role | Example |
+|------|------|---------|
+| `$(( ... ))` | **Compute** a number | `random_number=$((RANDOM % 100))` |
+| `[ ... ]` / `[[ ... ]]` | **Test** true/false (use `-ge`, `-gt`, …) | `[ "$n" -ge 50 ]` |
+| `(( ... ))` | **Test** with C-style math | `(( n >= 50 ))` |
+
+Typical pattern in this repo: assign with **`$(( ... ))`**, compare with **`[ "$n" -ge 50 ]`**. Use **`(( n >= 50 ))`** when you prefer `>=` syntax (bash-only).
+
+```bash
+random_number=$((RANDOM % 100))
+if [ "$random_number" -ge 50 ]; then
+    echo "You won"
+fi
+```
 
 ---
 
