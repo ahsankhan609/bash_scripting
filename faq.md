@@ -19,6 +19,7 @@ This is a small **bash scripting learning workspace**, not a large application. 
 | `scripts/bestdayever_v3.sh` | Command-line arguments — name passed when you run the script |
 | `scripts/conditional_statements.sh` | `if` / `else` and numeric tests |
 | `scripts/loops.sh` | `for` loops |
+| `scripts/arrays.sh` | Indexed arrays — declare, access elements |
 | `README.md` | Intro and course links (e.g. Network Chuck) |
 
 All scripts use `#!/bin/bash` and are meant to run on a typical Linux system where bash is installed at `/bin/bash`.
@@ -31,6 +32,7 @@ All scripts use `#!/bin/bash` and are meant to run on a typical Linux system whe
 - Command-line arguments: `$1`, `$*`, and multi-word values
 - Conditionals (`if` / `else`) and `for` loops
 - Comments (`#` single-line; multi-line patterns)
+- Arrays (declare, index, loop)
 
 ---
 
@@ -402,6 +404,91 @@ Set variables **before** the `if` that uses them, same rule as standalone condit
 
 ---
 
+## Arrays
+
+See [`arrays.sh`](scripts/arrays.sh) and the matching section in [notes.md](notes.md).
+
+### Q: How do I create an array in bash?
+
+Use parentheses with **space-separated** values (quoted if they contain spaces):
+
+```bash
+cars=("car" "train" "bike" "bus")
+```
+
+This is the standard form used in this repo. **No commas** — unlike Python or JavaScript lists.
+
+| Language | Example |
+|----------|---------|
+| Bash | `cars=("car" "train" "bike" "bus")` |
+| Python | `cars = ["car", "train", "bike", "bus"]` |
+| JavaScript | `const cars = ["car", "train", "bike", "bus"]` |
+
+Other valid bash forms:
+
+```bash
+cars=(car train bike bus)              # unquoted simple words
+cars=("red car" "blue bus")            # two items (spaces inside quotes)
+cars[0]="car"; cars[1]="train"         # assign by index
+declare -a cars=("car" "train")        # explicit declare (optional)
+```
+
+### Q: Do I need commas between array elements?
+
+**No.** Commas are **wrong** for bash array literals:
+
+```bash
+cars=("car", "train")    # WRONG — comma is not a separator
+cars=("car" "train")     # RIGHT
+```
+
+Bash separates elements with **spaces** (inside `(...)`), with quoting to keep multi-word values together.
+
+### Q: How do I access one element?
+
+Arrays are **0-based** — the first item is index `0`:
+
+```bash
+echo "${cars[0]}"   # car   (first)
+echo "${cars[1]}"   # train (second)
+echo "${cars[3]}"   # bus   (fourth)
+```
+
+Prefer **quoted** expansion: `"${cars[0]}"` not `${cars[0]}`. Quoting matters when an element contains spaces (e.g. `"red car"`).
+
+### Q: How do I print all elements or loop over an array?
+
+```bash
+# All elements (one line, space-separated)
+echo "${cars[@]}"
+
+# Count of elements
+echo "${#cars[@]}"
+
+# Loop — use "${cars[@]}" to keep each element separate
+for vehicle in "${cars[@]}"; do
+    echo "$vehicle"
+done
+```
+
+Use **`[@]`** when you want every element as its own word; **`[*]`** joins into one string (similar idea to script arguments).
+
+### Q: Is the syntax in `arrays.sh` correct?
+
+Yes. This is valid learning-style bash:
+
+```bash
+cars=("car" "train" "bike" "bus")
+echo "${cars[0]}"
+echo "${cars[1]}"
+echo "${cars[2]}"
+echo "${cars[3]}"
+```
+
+For longer lists, a `for vehicle in "${cars[@]}"` loop is cleaner than many separate `echo` lines.
+
+---
+
 ## Comments
 
 Comments explain scripts to humans; bash ignores them when running. Examples appear in scripts like [`bestdayever_v3.sh`](scripts/bestdayever_v3.sh) and [`positional_arguments.sh`](scripts/positional_arguments.sh).
@@ -484,4 +571,7 @@ cd scripts && ./bestdayever_v3.sh "john smith"
 # Conditionals and loops
 cd scripts && ./conditional_statements.sh
 cd scripts && ./loops.sh
+
+# Arrays
+cd scripts && bash arrays.sh
 ```
